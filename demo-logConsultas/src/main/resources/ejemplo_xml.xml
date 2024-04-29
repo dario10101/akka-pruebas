@@ -1,0 +1,157 @@
+<configuration>
+    <appender name = "STDOUT" class = "ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>[[[%d{yyyy-MM-dd HH:mm:ss}] - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="SIZE_TIME_OUTPUT_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>c:/Tools/logs/sizeTimeOutputlogFile.log</file>
+        <encoder>
+            <pattern>[[%d{yyyy-MM-dd HH:mm:ss}] - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>c:/Tools/logs/archived/sizeTimeOutputlogFile.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!--Max Size of file to start Archive -->
+                <maxFileSize>10KB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+
+            <!-- Days till log history to keep -->
+            <maxHistory>3</maxHistory>
+        </rollingPolicy>
+
+    </appender>
+
+    <root level = "DEBUG">
+        <appender-ref ref = "SIZE_TIME_OUTPUT_FILE"/>
+        <appender-ref ref = "STDOUT"/>
+    </root>
+</configuration>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<configuration>
+<!-- This is a development logging configuration that logs to standard out, for an example of a production
+    logging config, see the Akka docs: https://doc.akka.io/docs/akka/2.6/typed/logging.html#logback -->
+<appender name="STDOUT" target="System.out" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+        <pattern>[%date{ISO8601}] [%level] [%logger] [%thread] [%X{akkaSource}] - %msg%n</pattern>
+    </encoder>
+</appender>
+
+<!-- https://stackoverflow.com/questions/46411704/configuration-and-performan -->
+<appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+    <queueSize>1024</queueSize>
+    <neverBlock>true</neverBlock>
+    <!-- <includeCallerData>false</includeCallerData> -->
+    <appender-ref ref="STDOUT" />
+</appender>
+
+<root level="INFO">
+    <appender-ref ref="ASYNC"/>
+</root>
+
+</configuration>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<configuration>
+<!-- This is a development logging configuration that logs to standard out, for an example of a production
+logging config, see the Akka docs: https://doc.akka.io/docs/akka/2.6/typed/logging.html#logback -->
+
+
+<appender name = "STDOUT" class = "ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+        <pattern>[%d{yyyy-MM-dd HH:mm:ss}] - %msg%n</pattern>
+    </encoder>
+</appender>
+
+<appender name="GET_LOGS" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>./logs/logs-history-get.log</file>
+    <encoder>
+        <pattern>%d{yyyy-MM-dd HH:mm:ss} - %msg%n</pattern>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <fileNamePattern>./logs/archived-get/logs-history.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+        <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+            <!--Max Size of file to start Archive -->
+            <maxFileSize>10KB</maxFileSize>
+        </timeBasedFileNamingAndTriggeringPolicy>
+
+        <!-- Days till log history to keep -->
+        <maxHistory>3</maxHistory>
+    </rollingPolicy>
+
+</appender>
+<logger name="get-logs" level="DEBUG" additivity="true">
+    <appender-ref ref="GET-LOGS"/>
+</logger>
+
+<appender name="POST_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>./logs/logs-history-post.log</file>
+    <encoder>
+        <pattern>%d{yyyy-MM-dd HH:mm:ss} - %msg%n</pattern>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <fileNamePattern>./logs/archived-post/logs-history.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+        <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+            <!--Max Size of file to start Archive -->
+            <maxFileSize>10KB</maxFileSize>
+        </timeBasedFileNamingAndTriggeringPolicy>
+
+        <!-- Days till log history to keep -->
+        <maxHistory>3</maxHistory>
+    </rollingPolicy>
+
+</appender>
+
+<!-- https://stackoverflow.com/questions/46411704/configuration-and-performan-->
+<appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+    <queueSize>1024</queueSize>
+    <neverBlock>true</neverBlock>
+    <appender-ref ref="GET_LOGS" />
+</appender>
+
+<root level = "DEBUG">
+    <appender-ref ref = "GET_LOGS"/>
+    <appender-ref ref = "POST_LOG"/>
+    <appender-ref ref = "STDOUT"/>
+</root>
+
+</configuration>
+
+
+
+
+<appender name="POST-LOG" class="ch.qos.logback.core.FileAppender">
+<file>./logs/post-log.log</file>
+<append>true</append>
+<encoder>
+    <pattern>%d{yyyy-MM-dd HH:mm:ss} - %msg%n</pattern>
+</encoder>
+</appender> <!-- additivity=false ensures analytics data only goes to the analytics log -->
+<logger name="post-log" level="DEBUG" additivity="false">
+<appender-ref ref="POST-LOG"/>
+</logger>
